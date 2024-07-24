@@ -25,22 +25,26 @@ public class UserService {
         }
         // Encrypt the password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setUsername(user.getUsername().toLowerCase());
         User savedUser = userRepository.save(user); // Save and return the user
         System.out.println("User registered: " + savedUser); // Add logging for verification
         return savedUser;
     }
 
     public User processLogin(String username, String rawPassword) {
-        User user = userRepository.findByUsername(username);
-
-        if (user != null && passwordEncoder.matches(rawPassword, user.getPassword())) {
-            boolean passwordMatch = passwordEncoder.matches(rawPassword, user.getPassword());
-            System.out.println("Password match: " + passwordMatch); // Log password matching status
-            if (passwordMatch) {
-                return user; // Successful login
-            } // Successful login
+        User user = userRepository.findByUsername(username.toLowerCase());
+        System.out.println("Searching for user with username: " + username);
+        if (user == null) {
+            System.out.println("User not found in the database.");
+        } else {
+            System.out.println("User found: " + user.getUsername());
         }
-        return null; // Failed login
-    }
+        if (user != null && passwordEncoder.matches(rawPassword, user.getPassword())) {
 
+
+            return user; // Successful login
+
+        }
+        return null;
+    }
 }
