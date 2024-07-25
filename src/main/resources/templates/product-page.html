@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${product.name}">Product Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .product-image {
+            max-width: 100%;
+            height: auto;
+        }
+        .product-card {
+            margin-top: 20px;
+        }
+        .product-description {
+            margin-top: 20px;
+        }
+        .price {
+            color: #28a745; /* Bootstrap's success color */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card product-card">
+                <img th:src="${product.image}" class="card-img-top product-image" alt="Product Image">
+                <div class="card-body">
+                    <h1 class="card-title" th:text="${product.name}">Product Name</h1>
+                    <h3 class="card-text price" th:text="${'Price: $' + product.price}">Price</h3>
+                    <div class="product-description">
+                        <h2>Description</h2>
+                        <p class="card-text" th:text="${product.description}">Product Description</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <!-- You can add more content or a sidebar here if needed -->
+        </div>
+    </div>
+    <div class="text-center mt-4">
+        <a href="/" class="btn btn-primary">Go Back</a>
+    </div>
+</div>
+</body>
+</html>
