@@ -33,6 +33,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/signup", "/resources/**", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // Admin pages require ADMIN role
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin

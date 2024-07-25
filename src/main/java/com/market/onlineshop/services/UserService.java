@@ -1,6 +1,7 @@
 package com.market.onlineshop.services;
 
 import com.market.onlineshop.User;
+import com.market.onlineshop.UserRole;
 import com.market.onlineshop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,15 +20,13 @@ public class UserService {
     }
 
     public User signUp(User user) {
-        // Check if username already exists
         if (userRepository.findByUsername(user.getUsername()) != null) {
             throw new RuntimeException("Username already exists!");
         }
-        // Encrypt the password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setUsername(user.getUsername().toLowerCase());
-        User savedUser = userRepository.save(user); // Save and return the user
-        System.out.println("User registered: " + savedUser); // Add logging for verification
+        user.setRole(UserRole.USER); // Default role for new users
+        User savedUser = userRepository.save(user);
+        System.out.println("User registered: " + savedUser);
         return savedUser;
     }
 
@@ -47,4 +46,6 @@ public class UserService {
         }
         return null;
     }
+
+
 }

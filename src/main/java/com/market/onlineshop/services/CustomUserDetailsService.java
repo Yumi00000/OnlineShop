@@ -3,10 +3,13 @@ package com.market.onlineshop.services;
 import com.market.onlineshop.User;
 import com.market.onlineshop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -30,7 +33,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .roles(user.getIsAdmin() ? "ADMIN" : "USER") // Пример использования ролей
-                .build();
+                .authorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name())))                .build();
     }
 }

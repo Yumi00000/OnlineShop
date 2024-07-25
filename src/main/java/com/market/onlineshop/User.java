@@ -9,8 +9,9 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "users") // Use a non-reserved name for the table
+@Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,17 +29,19 @@ public class User {
     @Email
     private String email;
 
-
     private String phone;
     private String image;
 
-    @Column(name = "is_admin", nullable = false)
-    private Boolean isAdmin = false;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Order> orders; // Correct `mappedBy` to refer to the `user` field in Order
+    private List<Order> orders;
 
     public User() {
-        this.isAdmin = false;
+        this.role = UserRole.USER;
     }
+
+
 }

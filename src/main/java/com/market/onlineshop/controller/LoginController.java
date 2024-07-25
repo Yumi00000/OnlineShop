@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import jakarta.validation.Valid;
 
+
 @Controller
 public class LoginController {
 
@@ -35,12 +36,15 @@ public class LoginController {
         }
 
         User authenticatedUser = userService.processLogin(user.getUsername(), user.getPassword());
-        if (authenticatedUser != null) {
-            return "redirect:/"; // Redirect to home page or dashboard after successful login
-        } else {
-            model.addAttribute("error", "Invalid username or password"); // Add error message if login fails
-            return "login"; // Return to login page
+
+        if (authenticatedUser.getRole() != null) {
+            return switch (authenticatedUser.getRole()) {
+                case ADMIN -> "redirect:/admin/**";
+                case USER -> "redirect:/home";
+            };
         }
+        model.addAttribute("error", "Invalid username or password");
+        return "login";
     }
 
 

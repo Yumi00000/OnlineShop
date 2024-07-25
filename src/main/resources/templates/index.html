@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Products Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Products List</h1>
+    <div class="mb-3">
+        <input type="text" id="search-bar" class="form-control" placeholder="Search for products...">
+    </div>
+    <div th:if="${products != null}">
+        <div th:each="product : ${products}">
+            <div class="card mb-3" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${product.name}">Product Name</h5>
+                    <h6 class="card-subtitle mb-2 text-muted" th:text="${'Price: $' + product.price}">Price</h6>
+                    <p class="card-text" th:text="'Product ID: ' + ${product.id}">Product ID</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:if="${products == null}">
+        <p>No products available.</p>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#search-bar").autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: "/productsAutocomplete",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function(data) {
+                        response($.map(data, function(item) {
+                            return {
+                                label: item.name,
+                                value: item.name,
+                            };
+                        }));
+                    }
+                });
+            },
+            minLength: 2
+        });
+    });
+</script>
+</body>
+</html>
