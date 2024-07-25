@@ -54,6 +54,7 @@ public class HomePageController {
         public ProductDTO(Long id, String name) {
             this.id = id;
             this.name = name;
+
         }
 
     }

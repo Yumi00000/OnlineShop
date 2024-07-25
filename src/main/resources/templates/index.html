@@ -31,26 +31,32 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $("#search-bar").autocomplete({
-            source: function(request, response) {
+            source: function (request, response) {
                 $.ajax({
                     url: "/productsAutocomplete",
                     dataType: "json",
                     data: {
                         term: request.term
                     },
-                    success: function(data) {
-                        response($.map(data, function(item) {
+                    success: function (data) {
+                        response($.map(data, function (item) {
                             return {
                                 label: item.name,
                                 value: item.name,
+                                id: item.id,
                             };
                         }));
                     }
                 });
             },
-            minLength: 2
+            minLength: 2,
+            select: function (event, ui) {
+
+                window.location.href = '/product?product-id=' + ui.item.id;
+            },
+
         });
     });
 </script>
