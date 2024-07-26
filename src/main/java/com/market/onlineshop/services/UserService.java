@@ -1,7 +1,7 @@
 package com.market.onlineshop.services;
 
 import com.market.onlineshop.User;
-import com.market.onlineshop.UserRole;
+import com.market.onlineshop.User.UserRole;
 import com.market.onlineshop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

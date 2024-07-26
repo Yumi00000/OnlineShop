@@ -39,7 +39,7 @@ public class LoginController {
 
         if (authenticatedUser.getRole() != null) {
             return switch (authenticatedUser.getRole()) {
-                case ADMIN -> "redirect:/admin/**";
+                case ADMIN -> "redirect:/admin/home";
                 case USER -> "redirect:/home";
             };
         }

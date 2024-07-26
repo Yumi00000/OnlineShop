@@ -27,8 +27,9 @@
             <div class="card product-card">
                 <img th:src="${product.image}" class="card-img-top product-image" alt="Product Image">
                 <div class="card-body">
-                    <h1 class="card-title" th:text="${product.name}">Product Name</h1>
-                    <h3 class="card-text price" th:text="${'Price: $' + product.price}">Price</h3>
+                    <h5 class="card-title" th:text="${product.name}">Product Name</h5>
+                    <h6 class="card-subtitle mb-2 text-muted" th:text="${'Price: $' + product.price}">Price</h6>
+                    <p class="card-text" th:text="'Product ID: ' + ${product.id}">Product ID</p>
                     <div class="product-description">
                         <h2>Description</h2>
                         <p class="card-text" th:text="${product.description}">Product Description</p>
@@ -41,7 +42,7 @@
         </div>
     </div>
     <div class="text-center mt-4">
-        <a href="/" class="btn btn-primary">Go Back</a>
+        <a href="/home" class="btn btn-primary">Go Back</a>
     </div>
 </div>
 </body>
