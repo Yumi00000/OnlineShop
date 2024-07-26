@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, button {
+            margin-bottom: 10px;
+            padding: 8px;
+            font-size: 1em;
+        }
+        button {
+            cursor: pointer;
+        }
+        .feedback {
+            margin-bottom: 20px;
+            color: #d44;
+        }
+        .success {
+            color: #4caf50;
+        }
+        .info {
+            color: #2196f3;
+        }
+        h2 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Admin Dashboard</h1>
+
+<!-- Display feedback messages -->
+<div th:if="${message}" class="feedback" th:classappend="${messageType == 'success'} ? 'success' : 'info'">
+    <p th:text="${message}"></p>
+</div>
+
+<!-- Manage Orders -->
+<h2>Manage Orders</h2>
+<form th:action="@{/admin/orders}" method="post">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" />
+    <button type="submit">Get Orders</button>
+</form>
+
+<!-- Display orders -->
+<div th:if="${orders}">
+    <h3>Orders</h3>
+    <ul>
+        <li th:each="order : ${orders}">
+            <p>Order ID: <span th:text="${order.id}"></span></p>
+            <p>Status: <span th:text="${order.status}"></span></p>
+            <!-- Add more details as needed -->
+        </li>
+    </ul>
+</div>
+
+<!-- Change Order Status -->
+<h2>Change Order Status</h2>
+<form th:action="@{/admin/change-order-status}" method="post">
+    <label for="orderId">Order ID:</label>
+    <input type="text" id="orderId" name="orderId" />
+    <label for="status">New Status:</label>
+    <input type="text" id="status" name="status" />
+    <button type="submit">Change Status</button>
+</form>
+
+<!-- Display updated order status -->
+<div th:if="${order}">
+    <h3>Updated Order</h3>
+    <p>Order ID: <span th:text="${order.id}"></span></p>
+    <p>Status: <span th:text="${order.orderStatus}"></span></p>
+</div>
+
+<!-- Add Product -->
+<h2>Add Product</h2>
+<form th:action="@{/admin/add-product}" method="post">
+    <label for="productName">Product Name:</label>
+    <input type="text" id="productName" name="productName" />
+    <label for="productPrice">Product Price:</label>
+    <input type="text" id="productPrice" name="productPrice" />
+    <label for="productDescription">Product Description:</label>
+    <input type="text" id="productDescription" name="productDescription" />
+    <button type="submit">Add Product</button>
+</form>
+
+<!-- Display added products -->
+<div th:if="${products}">
+    <h3>Products</h3>
+    <ul>
+        <li th:each="product : ${products}">
+            <p>Product ID: <span th:text="${product.id}"></span></p>
+            <p>Name: <span th:text="${product.name}"></span></p>
+            <p>Price: <span th:text="${product.price}"></span></p>
+            <p>Description: <span th:text="${product.description}"></span></p>
+            <!-- Add more details as needed -->
+        </li>
+    </ul>
+</div>
+
+<!-- Change User Role -->
+<h2>Change User Role</h2>
+<form th:action="@{/admin/change-role}" method="post">
+    <label for="usernameRole">Username:</label>
+    <input type="text" id="usernameRole" name="username" />
+    <label for="role">New Role:</label>
+    <input type="text" id="role" name="role" />
+    <button type="submit">Change Role</button>
+</form>
+
+<!-- Display updated user role -->
+<div th:if="${user}">
+    <h3>Updated User</h3>
+    <p>Username: <span th:text="${user.username}"></span></p>
+    <p>Role: <span th:text="${user.role}"></span></p>
+</div>
+
+</body>
+</html>

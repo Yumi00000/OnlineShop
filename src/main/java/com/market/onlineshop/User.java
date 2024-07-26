@@ -12,6 +12,10 @@ import java.util.List;
 @Table(name = "users")
 public class User {
 
+    public enum UserRole {  // Corrected enum declaration to be public
+        ADMIN,
+        USER
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
