@@ -2,8 +2,12 @@ package com.market.onlineshop;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -11,11 +15,18 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+    @NotNull(message = "Name cannot be empty")
     private String name;
-    @Column(nullable = false)
-    @Size(min = 15, max = 100)
+    @NotNull(message = "Description cannot be empty")
+    @Size(min = 15, max = 100, message = "Product Description must be longer")
     private String description;
+    @NotNull(message = "Product price is required.")
+    @Positive(message = "Product price must be positive.")
     private Double price;
+
     private String image;
+
+
+    @ManyToMany(mappedBy = "products", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Order> orders;
 }

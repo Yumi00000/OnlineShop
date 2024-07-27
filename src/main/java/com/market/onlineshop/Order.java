@@ -2,7 +2,9 @@ package com.market.onlineshop;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -19,6 +21,15 @@ public class Order {
     private Double totalPrice;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false) // Remove `table` attribute
-    private User user; // Correct mapping
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "order_product",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> products;
 }
