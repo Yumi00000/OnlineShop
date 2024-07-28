@@ -1,7 +1,7 @@
 package com.market.onlineshop.controller;
 
 
-import com.market.onlineshop.Product;
+import com.market.onlineshop.models.Product;
 import com.market.onlineshop.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

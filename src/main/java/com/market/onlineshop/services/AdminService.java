@@ -1,8 +1,8 @@
 package com.market.onlineshop.services;
 
 
-import com.market.onlineshop.Order;
-import com.market.onlineshop.User;
+import com.market.onlineshop.models.Order;
+import com.market.onlineshop.models.User;
 import com.market.onlineshop.repository.OrderRepository;
 import com.market.onlineshop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

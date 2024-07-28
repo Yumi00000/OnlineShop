@@ -1,8 +1,8 @@
 package com.market.onlineshop.controller;
 
-import com.market.onlineshop.Order;
-import com.market.onlineshop.Product;
-import com.market.onlineshop.User;
+import com.market.onlineshop.models.Order;
+import com.market.onlineshop.models.Product;
+import com.market.onlineshop.models.User;
 import com.market.onlineshop.repository.OrderRepository;
 import com.market.onlineshop.repository.ProductRepository;
 import com.market.onlineshop.services.AdminService;
