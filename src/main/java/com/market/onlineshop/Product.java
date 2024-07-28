@@ -18,7 +18,7 @@ public class Product {
     @NotNull(message = "Name cannot be empty")
     private String name;
     @NotNull(message = "Description cannot be empty")
-    @Size(min = 15, max = 100, message = "Product Description must be longer")
+    @Size(min = 15, max = 100, message = "Product Description cannot be shorter than 15 characters")
     private String description;
     @NotNull(message = "Product price is required.")
     @Positive(message = "Product price must be positive.")
