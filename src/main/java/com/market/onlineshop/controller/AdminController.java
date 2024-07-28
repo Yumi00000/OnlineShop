@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin")
@@ -29,10 +30,11 @@ public class AdminController {
     }
 
 
-    @GetMapping("/home")
+    @GetMapping
     public String home(Model model) {
         model.addAttribute("orders", orderRepository.findAll());
         model.addAttribute("products", productRepository.findAll());
+        model.addAttribute("user", new User());
         model.addAttribute("product", new Product());
         return "admin";
     }
@@ -42,7 +44,7 @@ public class AdminController {
         if (id != null) {
             model.addAttribute("order", orderRepository.findById(id).orElse(null));
         }
-        return "redirect:/admin/home";
+        return "redirect:/order";
     }
 
 
@@ -52,27 +54,46 @@ public class AdminController {
         order.setId(orderId);
         Order updatedOrder = adminService.changeOrderStatus(order, status);
         model.addAttribute("order", updatedOrder);
-        return "redirect:/admin/home";
+        return "redirect:/admin";
     }
 
     @PostMapping("/add-product")
-    public String addProduct(@ModelAttribute("product") @Valid Product product, Model model, BindingResult result) {
+    public String addProduct(
+            @ModelAttribute("product") @Valid Product product,
+            BindingResult result,
+            RedirectAttributes redirectAttributes
+    ) {
         if (result.hasErrors()) {
-            return "redirect:/admin/home";
+            // Add binding result to flash attributes to maintain errors after redirect
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.product", result);
+            redirectAttributes.addFlashAttribute("product", product);
+            return "redirect:/admin";
         }
         try {
             productRepository.save(product);
+            redirectAttributes.addFlashAttribute("successMessage", "Product added successfully!");
         } catch (Exception e) {
-            model.addAttribute("addProductError", e.getMessage());
-            return "redirect:/admin/home";
+            // Handle any database exceptions here
+            redirectAttributes.addFlashAttribute("addProductError", "Error adding product: " + e.getMessage());
         }
-        return "redirect:/admin/home";
+        return "redirect:/admin";
     }
 
+
     @PostMapping("/change-role")
-    public String changeRole(@RequestParam String username, @RequestParam String role, Model model) {
-        User updatedUser = adminService.changeRole(username, role);
-        model.addAttribute("user", updatedUser);
-        return "redirect:/admin/home";
+    public String changeRole(
+            @RequestParam String username,
+            @RequestParam String role,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            User updatedUser = adminService.changeRole(username, role);
+            redirectAttributes.addFlashAttribute("successMessage", "User role updated successfully: " + updatedUser.getUsername() + " - " + updatedUser.getRole());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/admin";
     }
+
+
 }

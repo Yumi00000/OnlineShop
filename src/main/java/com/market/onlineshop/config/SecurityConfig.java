@@ -73,7 +73,7 @@ public class SecurityConfig {
 
                 if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
                     System.out.println("Redirecting to admin page");
-                    response.sendRedirect("/admin/home"); // Redirect to admin page
+                    response.sendRedirect("/admin"); // Redirect to admin page
                 } else {
                     System.out.println("Redirecting to user home page");
                     response.sendRedirect("/home"); // Redirect to user home page
