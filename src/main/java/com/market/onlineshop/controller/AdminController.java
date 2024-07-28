@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Objects;
+
 @Controller
 @RequestMapping("/admin")
 @PreAuthorize("hasRole('ADMIN')")
@@ -25,10 +27,10 @@ public class AdminController {
     private final OrderRepository orderRepository;
 
     @Autowired
-    public AdminController(AdminService adminService, ProductRepository productRepository, OrderRepository orderRepository) {
+    public AdminController(AdminService adminService,  OrderRepository orderRepository, ProductRepository productRepository) {
         this.adminService = adminService;
-        this.productRepository = productRepository;
         this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
     }
 
 
@@ -59,27 +61,22 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+
     @PostMapping("/add-product")
     public String addProduct(
             @ModelAttribute("product") @Valid Product product,
-            BindingResult result,
+            BindingResult bindingResult,
             RedirectAttributes redirectAttributes
     ) {
-        if (result.hasErrors()) {
-            // Add binding result to flash attributes to maintain errors after redirect
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.product", result);
-            redirectAttributes.addFlashAttribute("product", product);
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("errorMessage", Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
             return "redirect:/admin";
         }
-        try {
-            productRepository.save(product);
-            redirectAttributes.addFlashAttribute("successMessage", "Product added successfully!");
-        } catch (Exception e) {
-            // Handle any database exceptions here
-            redirectAttributes.addFlashAttribute("addProductError", "Error adding product: " + e.getMessage());
-        }
+        Product savedProduct = productRepository.save(product);
+        redirectAttributes.addFlashAttribute("successMessage", "Product added successfully with ID: " + savedProduct.getId());
         return "redirect:/admin";
     }
+
 
 
     @PostMapping("/change-role")
