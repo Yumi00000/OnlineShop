@@ -33,11 +33,26 @@ public class AdminService {
     }
 
 
-    public User changeRole(String username, String role) {
+    public User changeRole(String username, String role) throws Exception {
+        // Fetch user by username
         User user = userRepository.findByUsername(username);
-        user.setRole(User.UserRole.valueOf(role.toUpperCase()));
-        return user;
+
+        // Check if user exists
+        if (user == null) {
+            throw new Exception("User not found");
+        }
+
+        // Validate and set new role
+        try {
+            user.setRole(User.UserRole.valueOf(role.toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new Exception("Invalid role: " + role);
+        }
+
+        // Save the updated user back to the database
+        return userRepository.save(user);
     }
+
 
 
 }
