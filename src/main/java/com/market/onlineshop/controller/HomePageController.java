@@ -1,7 +1,7 @@
 package com.market.onlineshop.controller;
 
 
-import com.market.onlineshop.Product;
+import com.market.onlineshop.models.Product;
 import com.market.onlineshop.repository.ProductRepository;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class HomePageController {
                 .collect(Collectors.toList());
     }
 
-    // Data Transfer Object (DTO) for returning product data
+
     @Getter
     public static class ProductDTO {
         private final Long id;
