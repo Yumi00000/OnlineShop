@@ -9,12 +9,15 @@
             max-width: 100%;
             height: auto;
         }
+
         .product-card {
-            margin-top: 20px;
+            margin-top: 60px;
         }
+
         .product-description {
             margin-top: 20px;
         }
+
         .price {
             color: #28a745; /* Bootstrap's success color */
         }
@@ -22,25 +25,22 @@
 </head>
 <body>
 <div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card product-card">
-                <img th:src="${product.image}" class="card-img-top product-image" alt="Product Image">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${product.name}">Product Name</h5>
-                    <h6 class="card-subtitle mb-2 text-muted" th:text="${'Price: $' + product.price}">Price</h6>
-                    <p class="card-text" th:text="'Product ID: ' + ${product.id}">Product ID</p>
-                    <div class="product-description">
-                        <h2>Description</h2>
-                        <p class="card-text" th:text="${product.description}">Product Description</p>
-                    </div>
+
+    <div class="card mb-3" style="width: 69.4rem;">
+        <div class="card product-card">
+            <img th:src="${product.image}" class="card-img-top product-image" alt="Product Image">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${product.name}">Product Name</h5>
+                <h6 class="card-subtitle mb-2 text-muted" th:text="${'Price: $' + product.price}">Price</h6>
+                <p class="card-text" th:text="'Product ID: ' + ${product.id}">Product ID</p>
+                <div class="product-description">
+                    <h2>Description</h2>
+                    <p class="card-text" th:text="${product.description}">Product Description</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <!-- You can add more content or a sidebar here if needed -->
-        </div>
     </div>
+
     <div class="text-center mt-4">
         <a href="/home" class="btn btn-primary">Go Back</a>
     </div>

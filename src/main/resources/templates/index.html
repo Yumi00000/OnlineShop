@@ -16,7 +16,7 @@
     </div>
     <div th:if="${products != null}">
         <div th:each="product : ${products}">
-            <div class="card mb-3" style="width: 18rem;">
+            <div class="card mb-3" style="width: 69.4rem;">
                 <div class="card-body">
                     <a class="card-title" th:text="${product.name}" th:href="${'/product?product-id='+product.id}">Product Name</a><br>
                     <h6 class="card-subtitle mb-2 text-muted" th:text="${'Price: $' + product.price}">Price</h6>
