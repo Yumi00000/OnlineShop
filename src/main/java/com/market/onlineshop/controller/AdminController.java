@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -27,7 +28,7 @@ public class AdminController {
     private final OrderRepository orderRepository;
 
     @Autowired
-    public AdminController(AdminService adminService,  OrderRepository orderRepository, ProductRepository productRepository) {
+    public AdminController(AdminService adminService, OrderRepository orderRepository, ProductRepository productRepository) {
         this.adminService = adminService;
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
@@ -36,7 +37,8 @@ public class AdminController {
 
     @GetMapping
     public String home(Model model) {
-        model.addAttribute("orders", orderRepository.findAll());
+        List<Order> orders = orderRepository.findByOrderStatusNot("PLACED");
+        model.addAttribute("orders", orders);
         model.addAttribute("products", productRepository.findAll());
         model.addAttribute("user", new User());
         model.addAttribute("product", new Product());
@@ -76,7 +78,6 @@ public class AdminController {
         redirectAttributes.addFlashAttribute("successMessage", "Product added successfully with ID: " + savedProduct.getId());
         return "redirect:/admin";
     }
-
 
 
     @PostMapping("/change-role")
