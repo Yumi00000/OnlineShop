@@ -25,9 +25,15 @@ public class AdminService {
     public Order changeOrderStatus(Order order, String status) {
         Order updatedOrder = orderRepository.findById(order.getId()).orElse(null);
         if (updatedOrder != null) {
+
             updatedOrder.setOrderStatus(status);
+            if (status.equals("CANCELLED") || status.equals("DELIVERED")) {
+                orderRepository.delete(updatedOrder);
+                return null;
+            }
             return orderRepository.save(updatedOrder);
         }
+
 
         return null;
     }
@@ -52,7 +58,6 @@ public class AdminService {
         // Save the updated user back to the database
         return userRepository.save(user);
     }
-
 
 
 }
