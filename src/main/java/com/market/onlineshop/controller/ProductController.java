@@ -54,36 +54,45 @@ public class ProductController {
         Optional<Product> productOpt = productRepository.findById(productId);
         Optional<User> userOpt = userRepository.findById(userId);
 
-        if (productOpt.isPresent() && userOpt.isPresent()) {
-            Product product = productOpt.get();
-            User user = userOpt.get();
-
-            Optional<Order> orderOpt = orderRepository.findByUserId(userId);
-
-            Order order;
-            if (orderOpt.isPresent()) {
-                order = orderOpt.get();
-                order.setTotalPrice(order.getTotalPrice() + product.getPrice());
-                order.getProducts().add(product);
-            } else {
-                order = new Order();
-                order.setTimestamp(new Date());
-                order.setOrderStatus("Order Placed");
-                order.setTotalPrice(product.getPrice());
-                order.setUser(user);
-                order.setProducts(new ArrayList<>(List.of(product)));
-            }
-
-            // Save the order to the repository
-            orderRepository.save(order);
-
-            // Return a success view name or redirect
-            return "orderSuccess";
+        // Check if both product and user exist
+        if (productOpt.isEmpty() || userOpt.isEmpty()) {
+            model.addAttribute("error", "User or Product not found");
+            return "orderError";
         }
 
-        // Handle the case where either the user or product is not found
-        model.addAttribute("error", "User or Product not found");
-        return "orderError";
+        Product product = productOpt.get();
+        User user = userOpt.get();
+
+        // Retrieve or create the order
+        Order order = orderRepository.findByUserId(userId)
+                .map(existingOrder -> updateOrder(existingOrder, product))
+                .orElseGet(() -> createNewOrder(user, product));
+
+        // Save the order
+        orderRepository.save(order);
+
+        return "orderSuccess";
+    }
+
+    private Order updateOrder(Order order, Product product) {
+        if ("PLACED".equals(order.getOrderStatus())) {
+            order.getProducts().add(product);
+            order.setTotalPrice(order.getTotalPrice() + product.getPrice());
+        } else {
+            // Return a new order if the status is not "PlACED"
+            return createNewOrder(order.getUser(), product);
+        }
+        return order; // Return the updated order
+    }
+
+    private Order createNewOrder(User user, Product product) {
+        Order order = new Order();
+        order.setTimestamp(new Date());
+        order.setOrderStatus("PLACED");
+        order.setTotalPrice(product.getPrice());
+        order.setUser(user);
+        order.setProducts(new ArrayList<>(List.of(product)));
+        return order;
     }
 
 
