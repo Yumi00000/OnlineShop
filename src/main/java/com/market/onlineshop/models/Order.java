@@ -15,7 +15,8 @@ public class Order {
     private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date orderDate;
+    @Column(nullable = false)
+    private Date timestamp;
 
     private String orderStatus;
     private Double totalPrice;

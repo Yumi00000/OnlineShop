@@ -4,6 +4,8 @@ import com.market.onlineshop.models.User;
 import com.market.onlineshop.models.User.UserRole;
 import com.market.onlineshop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +48,11 @@ public class UserService {
         }
         return null;
     }
-
+    public Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+        return user.getId();
+    }
 
 }
