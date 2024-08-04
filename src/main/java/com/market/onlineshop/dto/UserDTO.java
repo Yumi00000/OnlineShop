@@ -15,6 +15,7 @@ public class UserDTO {
     private String email;
     private String phone;
     private String image;
+    private String postalAddress;
     private List<OrderDTO> orders;
 
 

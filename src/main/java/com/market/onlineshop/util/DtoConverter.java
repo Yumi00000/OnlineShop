@@ -18,6 +18,7 @@ public class DtoConverter {
         userDTO.setLastName(user.getLastName());
         userDTO.setEmail(user.getEmail());
         userDTO.setPhone(user.getPhone());
+        userDTO.setPostalAddress(user.getPostalAddress());
         userDTO.setImage(user.getImage());
         userDTO.setOrders(user.getOrders().stream().map(DtoConverter::convertToDto).collect(Collectors.toList()));
         return userDTO;

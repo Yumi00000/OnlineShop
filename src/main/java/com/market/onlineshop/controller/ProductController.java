@@ -71,7 +71,7 @@ public class ProductController {
         // Save the order
         orderRepository.save(order);
 
-        return "orderSuccess";
+        return "redirect:/order?order-id=" + order.getId();
     }
 
     private Order updateOrder(Order order, Product product) {
