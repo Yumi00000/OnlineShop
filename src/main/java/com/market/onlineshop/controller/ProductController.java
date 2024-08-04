@@ -45,7 +45,7 @@ public class ProductController {
             model.addAttribute("product", product.get());
             return "product-page";
         }
-        return "error";
+        return "error_page";
     }
 
     @PostMapping("/place-order")
@@ -57,7 +57,7 @@ public class ProductController {
         // Check if both product and user exist
         if (productOpt.isEmpty() || userOpt.isEmpty()) {
             model.addAttribute("error", "User or Product not found");
-            return "orderError";
+            return "error_page";
         }
 
         Product product = productOpt.get();
@@ -71,7 +71,7 @@ public class ProductController {
         // Save the order
         orderRepository.save(order);
 
-        return "orderSuccess";
+        return "redirect:/order?order-id=" + order.getId();
     }
 
     private Order updateOrder(Order order, Product product) {

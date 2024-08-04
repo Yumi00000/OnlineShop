@@ -6,7 +6,6 @@ import com.market.onlineshop.models.Order;
 import com.market.onlineshop.models.User;
 import com.market.onlineshop.repository.OrderRepository;
 import com.market.onlineshop.repository.UserRepository;
-import com.market.onlineshop.services.UserService;
 import com.market.onlineshop.util.DtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -26,12 +25,10 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final OrderRepository orderRepository;
-    private final UserService userService;
     private final UserRepository userRepository;
 
     @Autowired
-    public UserController(UserService userService, OrderRepository orderRepository, UserRepository userRepository) {
-        this.userService = userService;
+    public UserController( OrderRepository orderRepository, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
     }

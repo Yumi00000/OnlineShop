@@ -39,6 +39,8 @@ public class User {
     private String phone;
     private String image;
 
+    private String postalAddress;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;

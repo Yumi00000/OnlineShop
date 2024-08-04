@@ -1,9 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Status</title>
+    <title>Order Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body><h1>Order Successfully placed </h1>
+<body>
+<div class="container mt-5">
+    <h1>Order Details</h1>
+    <div class="card mt-3" style="width: 24rem;">
+        <div class="card-body">
+            <h5 class="card-title">Order ID: <span th:text="${order.id}"></span></h5>
+            <p class="card-text"><strong>Timestamp:</strong> <span th:text="${order.timestamp}"></span></p>
+            <p class="card-text"><strong>Status:</strong> <span th:text="${order.orderStatus}"></span></p>
+            <p class="card-text"><strong>Total Price:</strong> $<span th:text="${order.totalPrice}"></span></p>
+            <h5 class="mt-4">Products:</h5>
+            <ul class="list-group">
+                <li class="list-group-item" th:each="product : ${order.products}">
+                    <span th:text="${product.name}">Product Name</span> - $<span th:text="${product.price}">Price</span>
+                    <!-- Remove Product Form -->
+                    <form th:action="@{/remove-product(product-id=${product.id}, order-id=${order.id})}" method="post">
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                    </form>
+                </li>
+            </ul>
+            <!-- Address Update Form -->
+            <h2 class="mt-5">Postal Address</h2>
+            <form th:action="@{/update-address}" method="post">
+                <div class="form-group">
+                    <label for="postalAddress">Postal Address:</label>
+                    <input type="text" id="postalAddress" name="postalAddress" class="form-control"
+                           th:value="${order.user.postalAddress}" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Address</button>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>
