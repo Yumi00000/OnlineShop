@@ -2,14 +2,16 @@ package com.market.onlineshop.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
+import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.Date;
 import java.util.List;
 
 @Data
 @Entity
-@Table(name = "orders") // Ensure this name doesn't conflict with SQL keywords
+@Table(name = "orders")
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,8 +25,9 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude
+    @JsonBackReference // Use this on the child side of the relationship
     private User user;
-
 
     @ManyToMany
     @JoinTable(

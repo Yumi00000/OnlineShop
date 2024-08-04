@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${user_data.username}">User name</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>User Details</h1>
+    <div class="card" style="width: 69.4rem;">
+        <img th:src="${user_data.image}" class="card-img-top" alt="User Image" >
+        <div class="card-body">
+            <h5 class="card-title" th:text="${user_data.username}">Username</h5>
+            <p class="card-text"><strong>First Name:</strong> <span th:text="${user_data.firstName}">First Name</span></p>
+            <p class="card-text"><strong>Last Name:</strong> <span th:text="${user_data.lastName}">Last Name</span></p>
+            <p class="card-text"><strong>Email:</strong> <span th:text="${user_data.email}">Email</span></p>
+            <p class="card-text"><strong>Phone:</strong> <span th:text="${user_data.phone}">Phone</span></p>
+        </div>
+    </div>
+    <h2>Orders</h2>
+    <ul class="list-group" th:if="${orders != null}">
+        <li class="list-group-item" th:each="order : ${orders}">
+            <span th:text="'Order ID: ' + ${order.id}"></span><br>
+            <span th:text="'Order Status: ' + ${order.orderStatus}"></span><br>
+            <span th:text="'Total Price: ' + ${order.totalPrice}"></span><br>
+            <span th:text="'Order Date: ' + ${#dates.format(order.timestamp, 'yyyy-MM-dd HH:mm')}"></span>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

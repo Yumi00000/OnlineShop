@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
 
 @Data
@@ -12,10 +14,11 @@ import java.util.List;
 @Table(name = "users")
 public class User {
 
-    public enum UserRole {  // Corrected enum declaration to be public
+    public enum UserRole {
         ADMIN,
         USER
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,11 +44,11 @@ public class User {
     private UserRole role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @JsonManagedReference // Use this on the parent side of the relationship
     private List<Order> orders;
 
     public User() {
         this.role = UserRole.USER;
     }
-
-
 }
