@@ -43,7 +43,7 @@ public class UserController {
 
         if (user != null) {
             logger.debug("User found: {}", user);
-            List<Order> orders = orderRepository.findAllByUserId(user.getId());
+            List<Order> orders = orderRepository.findAllByUserIdAndOrderStatus(user.getId(), "PLACED");
 
             // Convert User to UserDTO
             UserDTO userDTO = DtoConverter.convertToDto(user);

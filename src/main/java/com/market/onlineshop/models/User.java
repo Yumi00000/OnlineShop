@@ -47,7 +47,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    @JsonManagedReference // Use this on the parent side of the relationship
+    @JsonManagedReference
     private List<Order> orders;
 
     public User() {
