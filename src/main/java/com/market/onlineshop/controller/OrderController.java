@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -24,15 +25,18 @@ public class OrderController {
     private final UserService userService;
     private final ProductRepository productRepository;
 
+
+
     @Autowired
     public OrderController(OrderRepository orderRepository, UserService userService, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.productRepository = productRepository;
+
     }
 
     @GetMapping("/order")
-    public String order(@RequestParam("order-id") Long orderId, Model model, String postalAddress) {
+    public String order(@RequestParam("order-id") Long orderId, Model model) {
         Long user = userService.getCurrentUserId();
         if (user != null) {
             Optional<Order> order = orderRepository.findByUserIdAndId(user, orderId);
@@ -40,6 +44,18 @@ public class OrderController {
             return "orderSuccess";
         }
         return null;
+    }
+
+    @PostMapping("/order")
+    public String completeOrder(@RequestParam("order-id") Long orderId, Model model) {
+        Long user = userService.getCurrentUserId();
+        if (user != null) {
+            Optional<Order> order = orderRepository.findByUserIdAndId(user, orderId);
+            order.ifPresent(orderP -> orderP.setOrderStatus("PENDING"));
+            model.addAttribute("order", order);
+            return "orderSuccess";
+        }
+        return "error_page";
     }
 
     @PostMapping("/remove-product")
@@ -63,17 +79,10 @@ public class OrderController {
         Product productPrice = productRepository.findById(productId).orElse(null);
         assert productPrice != null;
         order.setTotalPrice(order.getTotalPrice() -  productPrice.getPrice());
-        boolean productRemoved = order.getProducts().removeIf(product -> product.getId().equals(productId));
+        order.getProducts().remove(Objects.requireNonNull(productRepository.findFirstById(productId)));
 
-        if (!productRemoved) {
-            model.addAttribute("error", "Product not found in the order");
-            return "error_page"; // Replace with the actual error page name
-        }
-
-        // Save the updated order
         orderRepository.save(order);
 
-        // Redirect to the updated order details page
         return "redirect:/order?order-id=" + orderId;
     }
 }
