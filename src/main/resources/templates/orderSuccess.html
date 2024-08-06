@@ -26,13 +26,13 @@
             </ul>
             <!-- Address Update Form -->
             <h2 class="mt-5">Postal Address</h2>
-            <form th:action="@{/update-address}" method="post">
+            <form th:action="@{/order(order-id=${order.id})}" method="post">
                 <div class="form-group">
                     <label for="postalAddress">Postal Address:</label>
                     <input type="text" id="postalAddress" name="postalAddress" class="form-control"
                            th:value="${order.user.postalAddress}">
                 </div>
-                <button type="submit" class="btn btn-primary">Update Address</button>
+                <button type="submit" class="btn btn-primary">Complete order</button>
             </form>
         </div>
     </div>

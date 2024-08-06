@@ -3,8 +3,10 @@ package com.market.onlineshop.controller;
 
 import com.market.onlineshop.models.Order;
 import com.market.onlineshop.models.Product;
+import com.market.onlineshop.models.User;
 import com.market.onlineshop.repository.OrderRepository;
 import com.market.onlineshop.repository.ProductRepository;
+import com.market.onlineshop.repository.UserRepository;
 import com.market.onlineshop.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,14 +26,16 @@ public class OrderController {
     private final OrderRepository orderRepository;
     private final UserService userService;
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
 
 
     @Autowired
-    public OrderController(OrderRepository orderRepository, UserService userService, ProductRepository productRepository) {
+    public OrderController(OrderRepository orderRepository, UserService userService, ProductRepository productRepository, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
 
     }
 
@@ -47,13 +51,28 @@ public class OrderController {
     }
 
     @PostMapping("/order")
-    public String completeOrder(@RequestParam("order-id") Long orderId, Model model) {
-        Long user = userService.getCurrentUserId();
-        if (user != null) {
-            Optional<Order> order = orderRepository.findByUserIdAndId(user, orderId);
-            order.ifPresent(orderP -> orderP.setOrderStatus("PENDING"));
-            model.addAttribute("order", order);
-            return "orderSuccess";
+    public String completeOrder(@RequestParam("order-id") Long orderId,
+                                @RequestParam(value = "postalAddress", required = false) String postalAddress,
+                                Model model) {
+        Long userId = userService.getCurrentUserId();
+        if (userId != null) {
+            Optional<Order> orderOpt = orderRepository.findByUserIdAndId(userId, orderId);
+            if (orderOpt.isPresent()) {
+                Order order = orderOpt.get();
+                order.setOrderStatus("PENDING");
+                orderRepository.save(order);
+
+                if (postalAddress != null && !postalAddress.isEmpty()) {
+                    User user = userRepository.findById(userId).orElse(null);
+                    if (user != null) {
+                        user.setPostalAddress(postalAddress);
+                        userRepository.save(user);
+                    }
+                }
+
+                model.addAttribute("order", order);
+                return "redirect:/my-profile";
+            }
         }
         return "error_page";
     }
