@@ -80,8 +80,12 @@ public class OrderController {
         assert productPrice != null;
         order.setTotalPrice(order.getTotalPrice() -  productPrice.getPrice());
         order.getProducts().remove(Objects.requireNonNull(productRepository.findFirstById(productId)));
-
         orderRepository.save(order);
+
+        if(order.getProducts().toArray().length == 0) {
+            orderRepository.delete(order);
+            return "redirect:/home";
+        }
 
         return "redirect:/order?order-id=" + orderId;
     }
