@@ -10,9 +10,10 @@ import com.market.onlineshop.util.DtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,11 +27,13 @@ public class UserController {
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController( OrderRepository orderRepository, UserRepository userRepository) {
+    public UserController(OrderRepository orderRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/my-profile")
@@ -61,4 +64,54 @@ public class UserController {
         logger.warn("User not found: {}", username);
         return "error_page";
     }
+
+    @RequestMapping(value = "/edit-userdata", method = RequestMethod.GET)
+    public String editUserData(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+
+            model.addAttribute("user_data", user);
+            return "edit_user";
+        }
+        return "error_page";
+    }
+
+    @RequestMapping(value = "/edit-userdata", method = RequestMethod.POST)
+    public String saveUserData(@ModelAttribute("user_data") User formUser, Model model) {
+        try {
+            // Retrieve the authenticated user's username
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+
+            // Retrieve the existing user from the database
+            User existingUser = userRepository.findByUsername(username);
+
+            if (existingUser == null) {
+                logger.warn("User not found: {}", username);
+                return "error_page";
+            }
+
+            // Update the existing user's fields with the data from the form
+            existingUser.setFirstName(formUser.getFirstName());
+            existingUser.setLastName(formUser.getLastName());
+            existingUser.setEmail(formUser.getEmail());
+            existingUser.setPostalAddress(formUser.getPostalAddress());
+            existingUser.setPhone(formUser.getPhone());
+            if(formUser.getPassword() != null) {
+                existingUser.setPassword(passwordEncoder.encode(formUser.getPassword()));
+            }
+
+            // Save the updated user entity
+            userRepository.saveAndFlush(existingUser);
+
+            return "redirect:/my-profile";
+        } catch (Exception e) {
+            logger.warn("Error saving user data: {}", formUser.getUsername(), e);
+            return "error_page";
+        }
+    }
+
+
 }
