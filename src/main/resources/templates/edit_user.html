@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit User Data</title>
+</head>
+<body>
+<h1>Edit Your Profile</h1>
+
+<!-- Check if there's a user data object -->
+<form th:action="@{/edit-userdata}" th:object="${user_data}" method="post">
+  <input type="hidden" th:field="*{username}" >
+  <div>
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" th:field="*{firstName}" required />
+  </div>
+
+  <div>
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" th:field="*{lastName}" required />
+  </div>
+
+  <div>
+    <label for="email">Email:</label>
+    <input type="email" id="email" th:field="*{email}" required />
+  </div>
+ <div>
+    <label for="phone">Email:</label>
+    <input type="text" id="phone" th:field="*{phone}" required />
+  </div>
+
+  <div>
+    <label for="postalAddress">Postal Address:</label>
+    <textarea id="postalAddress" th:field="*{postalAddress}" required></textarea>
+  </div>
+
+  <div>
+    <label for="encodePassword">Password:</label>
+    <input id="encodePassword" type="password">
+  </div>
+
+  <div>
+    <button type="submit">Save Changes</button>
+    <a href="/my-profile">Cancel</a>
+  </div>
+</form>
+</body>
+</html>
