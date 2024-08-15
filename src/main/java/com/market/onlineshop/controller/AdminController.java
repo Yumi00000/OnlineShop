@@ -46,11 +46,23 @@ public class AdminController {
     }
 
     @GetMapping("/order")
-    public String getOrder(@RequestParam(name = "id", required = false) Long id, Model model) {
+    public String getOrder(@RequestParam(name = "id") Long id, Model model) {
         if (id != null) {
             model.addAttribute("order", orderRepository.findById(id).orElse(null));
         }
-        return "redirect:/order";
+        return "orderAdmin";
+    }
+
+
+    @PostMapping("/order-accept")
+    public String acceptOrder(@RequestParam(name = "id") Long id) {
+        Order order = orderRepository.findById(id).orElse(null);
+        if (order != null) {
+            order.setOrderStatus("ACCEPTED");
+            orderRepository.save(order);
+            return "redirect:/admin";
+        }
+        return "error_page";
     }
 
 
